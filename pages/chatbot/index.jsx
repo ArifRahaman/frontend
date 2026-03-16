@@ -5,60 +5,65 @@ import Loader from "@/components/Loader";
 import ReactTyped from "react-typed";
 
 const CHATBOT_DOMAIN = process.env.NEXT_PUBLIC_CHATBOT_DOMAIN;
+const LOADING_TIMEOUT_DURATION = 15000;
 
 const Index = () => {
   const [username, setUsername] = useState("");
   const [chats, setChats] = useState([]);
   const [loadingTimeout, setLoadingTimeout] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [inputText, setInputText] = useState(""); // Add state for the input box
-  const [email, setEmail] = useState(""); // Add state for the email box
+  const [inputText, setInputText] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handlespeechSubmit = async (e) => {
+  const handleSpeechSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setLoadingTimeout(
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 15000)
-    );
-
-    if (
-      !inputText ||
-      !username ||
-      inputText.length == 0 ||
-      username.length == 0
-    ) {
-      // At least one of the fields is empty or contains only whitespace
-      // Handle the validation error here
+    if (!isValidInput()) {
       console.error("Please provide valid values for all fields.");
       return;
     }
-
+    startLoading();
     try {
       const response = await axios.post(`${CHATBOT_DOMAIN}/postquestion/`, {
         question: inputText,
         username: username,
         email_support: email,
       });
+      handleResponse(response);
+    } catch (err) {
+      console.error("Error submitting question:", err);
+      stopLoading();
+    }
+  };
 
-      if (response.status == 200) {
+  const isValidInput = () => {
+    return inputText && username && inputText.trim().length > 0 && username.trim().length > 0;
+  };
+
+  const startLoading = () => {
+    setIsLoading(true);
+    setLoadingTimeout(
+      setTimeout(() => {
         setIsLoading(false);
+      }, LOADING_TIMEOUT_DURATION)
+    );
+  };
 
-        setChats((prevChats) => [
-          ...prevChats,
-          {
-            question: inputText,
-            answer: response.data.response,
-          },
-        ]);
+  const stopLoading = () => {
+    setIsLoading(false);
+    clearTimeout(loadingTimeout);
+  };
 
-        clearTimeout(loadingTimeout);
-        if (email != null && email.length > 0) {
-        }
-      } else {
-      }
-    } catch (err) {}
+  const handleResponse = (response) => {
+    if (response.status === 200) {
+      stopLoading();
+      setChats((prevChats) => [
+        ...prevChats,
+        {
+          question: inputText,
+          answer: response.data.response,
+        },
+      ]);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -73,18 +78,11 @@ const Index = () => {
     generateUniqueId();
   }, []);
 
-  // Function to format text with bold and italic tags
   const formatText = (text) => {
-    // Replace **text** with <b> tags for bold text
     text = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-
-    // Replace _text_ with <i> tags for italic text
     text = text.replace(/_(.*?)_/g, "<i>$1</i>");
-
     return text;
   };
-
-  // Initialize chats as an empty array
 
   return (
     <>
@@ -254,9 +252,6 @@ const Index = () => {
             </div>
           ))}
           <div>
-            {/* <p className="text-white">
-              Microphone Status(🎤) : {listening ? "on ✅" : "off ❌"}
-            </p> */}
             <textarea
               type="email"
               id="email"
@@ -269,32 +264,10 @@ const Index = () => {
           </div>
 
           <div className="speech-buttons flex-col mt-4">
-            {/* <button
-              className="flex mx-auto  text-white bg-black border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-              onClick={(e) => {
-                handleStart(e);
-              }}
-            >
-              Voice
-            </button>
-            <button
-              className="flex mx-auto text-white bg-black border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-              onClick={(e) => {
-                stopListening(e);
-              }}
-            >
-              Only chat
-            </button> */}
-            {/* <button
-              className="flex mx-auto  text-white bg-black border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-              onClick={resetTranscript}
-            >
-              Reset
-            </button> */}
             <button
               className="flex mx-auto  text-white bg-blue-900 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-lg"
               onClick={(e) => {
-                handlespeechSubmit(e);
+                handleSpeechSubmit(e);
               }}
             >
               Send
