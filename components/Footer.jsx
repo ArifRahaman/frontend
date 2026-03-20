@@ -1,91 +1,49 @@
 import React from "react";
+const SECTION_WIDTH_LG = "lg:w-1/3";
+const SECTION_WIDTH_MD = "md:w-1/2";
+const SECTION_WIDTH_FULL = "w-full";
+const TEXT_GRAY_100 = "text-gray-100";
+const HOVER_TEXT_GREEN_600 = "hover:text-green-600";
+const CURSOR_POINTER = "cursor-pointer";
+const NAV_ITEMS = [
+  { title: "Primary Care" },
+  { title: "Specialized Treatments" },
+  { title: "Wellness Programs" },
+  { title: "Emergency Care" },
+];
+const TEAM_NAV_ITEMS = [
+  { title: "Medical Professionals" },
+  { title: "Support Staff" },
+  { title: "Administrative Team" },
+  { title: "Career Opportunities" },
+];
+
+const FooterSection = ({ title, items }) => (
+  <div class={`${SECTION_WIDTH_LG} ${SECTION_WIDTH_MD} ${SECTION_WIDTH_FULL} px-4`}>
+    <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+      {title}
+    </h2>
+    <nav class="list-none mb-10">
+      {items.map((item) => (
+        <li key={item.title}>
+          <a class={`${TEXT_GRAY_100} ${CURSOR_POINTER} ${HOVER_TEXT_GREEN_600}`}>
+            {item.title}
+          </a>
+        </li>
+      ))}
+    </nav>
+  </div>
+);
+
 const Footer = () => {
   return (
     <>
-      <footer class="text-gray-100 body-font bg-slate-700">
+      <footer class={`${TEXT_GRAY_100} body-font bg-slate-700`}>
         <div class="container px-5 py-24 mx-auto">
           <div class="flex flex-wrap md:text-left text-center -mb-10 -mx-4">
-            <div class="lg:w-1/3 md:w-1/2 w-full px-4">
-              <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
-                HEALTHCARE SERVICES
-              </h2>
-              <nav class="list-none mb-10">
-                <li>
-                  <a class="text-gray-100 cursor-pointer hover:text-green-600 ">
-                    Primary Care
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Specialized Treatments
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Wellness Programs
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Emergency Care
-                  </a>
-                </li>
-              </nav>
-            </div>
-            <div class="lg:w-1/3 md:w-1/2 w-full px-4">
-              <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
-                OUR TEAM
-              </h2>
-              <nav class="list-none mb-10">
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Medical Professionals
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Support Staff
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Administrative Team
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Career Opportunities
-                  </a>
-                </li>
-              </nav>
-            </div>
-            <div class="lg:w-1/3 md:w-1/2 w-full px-4">
-              <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3 cursor-pointer">
-                OUR TEAM
-              </h2>
-              <nav class="list-none mb-10">
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Medical Professionals
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Support Staff
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Administrative Team
-                  </a>
-                </li>
-                <li>
-                  <a class="text-gray-100 hover:text-green-600 cursor-pointer">
-                    Career Opportunities
-                  </a>
-                </li>
-              </nav>
-            </div>
+            <FooterSection title="HEALTHCARE SERVICES" items={NAV_ITEMS} />
+            <FooterSection title="OUR TEAM" items={TEAM_NAV_ITEMS} />
+            <FooterSection title="OUR TEAM" items={TEAM_NAV_ITEMS} />
           </div>
         </div>
         <div class="border-t border-gray-200">
@@ -94,7 +52,7 @@ const Footer = () => {
               <div class="relative sm:w-64 w-40 sm:mr-4 mr-2">
                 <label
                   for="footer-field"
-                  class="leading-7 text-sm text-gray-100"
+                  class="leading-7 text-sm ${TEXT_GRAY_100}"
                 >
                   Subscribe for Health Tips
                 </label>
@@ -135,7 +93,7 @@ const Footer = () => {
               © 2023 HealthHub —
               <a
                 href="https://twitter.com/HealthHub"
-                class="text-gray-100 ml-1"
+                class="${TEXT_GRAY_100} ml-1"
                 target="_blank"
                 rel="noopener noreferrer"
               >
